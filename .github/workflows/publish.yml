@@ -1,0 +1,55 @@
+name: publish
+
+# Validates config.json on every PR; on main, signs it and publishes it on GitHub Pages (README.md).
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/publish.mjs
+
+  publish:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Sign
+        env:
+          OTW_CONFIG_SIGNING_KEY: ${{ secrets.OTW_CONFIG_SIGNING_KEY }}
+        run: |
+          [ -n "$OTW_CONFIG_SIGNING_KEY" ] || { echo "::error::OTW_CONFIG_SIGNING_KEY is not set"; exit 1; }
+          node scripts/publish.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
