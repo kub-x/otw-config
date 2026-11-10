@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "ios": {
-    "minimumBuild": 16,
+    "minimumBuild": 22,
     "blockedBuilds": [],
     "updateUrl": "https://beta.itunes.apple.com/v1/app/6825948477"
   },
