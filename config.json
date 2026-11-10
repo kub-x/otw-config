@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "ios": {
-    "minimumBuild": 0,
+    "minimumBuild": 16,
     "blockedBuilds": [],
     "updateUrl": "https://beta.itunes.apple.com/v1/app/6825948477"
   },
@@ -10,5 +10,5 @@
     "blockedBuilds": [],
     "updateUrl": null
   },
-  "message": "This build has a known problem. Install the latest build from TestFlight to keep playing."
+  "message": "This build is out of date. Install the latest build from TestFlight to keep playing."
 }
